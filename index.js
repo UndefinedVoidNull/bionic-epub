@@ -60,94 +60,86 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
     // Path to the OEBPS folder
     const oebpsPath = path.join(outputDirPath, 'OEBPS');
 
-    // Read all HTML files in the OEBPS folder
-    fs.readdir(oebpsPath, (err, files) => {
-        if (err) {
-            console.error('Error reading OEBPS folder:', err);
-            process.exit(1);
-        }
+    // Function to apply Bionic Reading style to HTML files recursively
+    function applyBionicReadingToFiles(folderPath) {
+        fs.readdirSync(folderPath).forEach((file) => {
+            const filePath = path.join(folderPath, file);
+            const stats = fs.statSync(filePath);
 
-        files.forEach((file) => {
-            if (path.extname(file) === '.html') {
-                const htmlFilePath = path.join(oebpsPath, file);
-
+            // Recursively process subdirectories
+            if (stats.isDirectory()) {
+                applyBionicReadingToFiles(filePath);
+            } else if (stats.isFile() && path.extname(file) === '.html') {
                 // Read the HTML file
-                fs.readFile(htmlFilePath, 'utf8', (err, data) => {
-                    if (err) {
-                        console.error(`Error reading HTML file ${file}:`, err);
-                        return;
-                    }
+                const data = fs.readFileSync(filePath, 'utf8');
 
-                    // Load the HTML content into Cheerio
-                    const $ = cheerio.load(data);
+                // Load the HTML content into Cheerio
+                const $ = cheerio.load(data);
 
-                    // Apply Bionic Reading style to the text content
-                    $('p, h1, h2, h3, h4, h5, h6').each((index, element) => {
-                        const text = $(element).text();
-                        const bionicText = colorMode === 'black'
-                            ? applyBionicReadingBlack(text, unfocusedOpacity)
-                            : applyBionicReadingColor(text, boldColors, unfocusedOpacity);
-                        $(element).html(bionicText);
-                    });
-
-                    // Write the modified content back to the HTML file
-                    fs.writeFile(htmlFilePath, $.html(), 'utf8', (err) => {
-                        if (err) {
-                            console.error(`Error writing HTML file ${file}:`, err);
-                        }
-                    });
+                // Apply Bionic Reading style to the text content
+                $('p, h1, h2, h3, h4, h5, h6').each((index, element) => {
+                    const text = $(element).text();
+                    const bionicText = colorMode === 'black'
+                        ? applyBionicReadingBlack(text, unfocusedOpacity)
+                        : applyBionicReadingColor(text, boldColors, unfocusedOpacity);
+                    $(element).html(bionicText);
                 });
+
+                // Write the modified content back to the HTML file
+                fs.writeFileSync(filePath, $.html(), 'utf8');
             }
         });
+    }
 
-        // Create a new EPUB file with Bionic prefix
-        const prefix = colorMode === 'black' ? 'BionicB_' : 'BionicC_';
-        const epubFileName = `${prefix}${name}.epub`;
-        const epubFilePath = path.join(dir, epubFileName);
-        
-        const output = fs.createWriteStream(epubFilePath);
-        const archive = archiver('zip', {
-            zlib: { level: 9 } // Sets the compression level.
-        });
+    // Apply Bionic Reading style to HTML files recursively
+    applyBionicReadingToFiles(oebpsPath);
 
-        // listen for all archive data to be written
-        // 'close' event is fired only when a file descriptor is involved
-        output.on('close', () => {
-            console.log(`EPUB file created: ${epubFilePath}`);
+    // Create a new EPUB file with Bionic prefix
+    const prefix = colorMode === 'black' ? 'BionicB_' : 'BionicC_';
+    const epubFileName = `${prefix}${name}.epub`;
+    const epubFilePath = path.join(dir, epubFileName);
 
-            // Delete the decompressed folder
-            fs.rm(outputDirPath, { recursive: true, force: true }, (err) => {
-                if (err) {
-                    console.error('Error deleting decompressed folder:', err);
-                } else {
-                    console.log('Decompressed folder deleted successfully.');
-                }
-            });
-        });
-
-        // Catch warnings
-        archive.on('warning', (err) => {
-            if (err.code === 'ENOENT') {
-                console.warn(err);
-            } else {
-                throw err;
-            }
-        });
-
-        // Catch errors
-        archive.on('error', (err) => {
-            throw err;
-        });
-
-        // Pipe archive data to the output file
-        archive.pipe(output);
-
-        // Append the decompressed EPUB folder to the archive
-        archive.directory(outputDirPath, false);
-
-        // Finalize the archive (i.e. we are done appending files, but streams have to finish yet)
-        archive.finalize();
+    const output = fs.createWriteStream(epubFilePath);
+    const archive = archiver('zip', {
+        zlib: { level: 9 } // Sets the compression level.
     });
+
+    // Listen for all archive data to be written
+    output.on('close', () => {
+        console.log(`EPUB file created: ${epubFilePath}`);
+
+        // Delete the decompressed folder
+        fs.rm(outputDirPath, { recursive: true, force: true }, (err) => {
+            if (err) {
+                console.error('Error deleting decompressed folder:', err);
+            } else {
+                console.log('Decompressed folder deleted successfully.');
+            }
+        });
+    });
+
+    // Catch warnings
+    archive.on('warning', (err) => {
+        if (err.code === 'ENOENT') {
+            console.warn(err);
+        } else {
+            throw err;
+        }
+    });
+
+    // Catch errors
+    archive.on('error', (err) => {
+        throw err;
+    });
+
+    // Pipe archive data to the output file
+    archive.pipe(output);
+
+    // Append the decompressed EPUB folder to the archive
+    archive.directory(outputDirPath, false);
+
+    // Finalize the archive
+    archive.finalize();
 });
 
 // Function to apply Bionic Reading style to the text (black mode)
