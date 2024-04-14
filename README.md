@@ -35,6 +35,8 @@ node ./index.js <epubPath> --black
 ebook-convert <inputPath>.epub <outputPath>.pdf
 ```
 
+notice: `pandoc` will not keep the color by default
+
 ## testing
 - `Calibre` passed ✅
 - `NeoReader by Boox` passed ✅
