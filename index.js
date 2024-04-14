@@ -123,7 +123,7 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
             });
         });
 
-        // Catch warnings (e.g. stat failures and other non-blocking errors)
+        // Catch warnings
         archive.on('warning', (err) => {
             if (err.code === 'ENOENT') {
                 console.warn(err);
