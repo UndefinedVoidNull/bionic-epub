@@ -38,7 +38,7 @@ ebook-convert <inputPath>.epub <outputPath>.pdf
 ## testing
 `Calibre` passed
 
-**some epub viewers not passed**
+**some epub viewers not passed yet**
 
 ## customization
 - boldColors
