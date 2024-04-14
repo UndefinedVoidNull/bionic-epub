@@ -1,7 +1,7 @@
 # bionic-epub
 bionic-epub is a `Node.js` command-line tool to apply `Bionic Reading` styles to `.epub` file
 
-## Effect
+## effects
 ### Original
 ![Original](./screenshots/Original.png)
 
@@ -12,25 +12,34 @@ bionic-epub is a `Node.js` command-line tool to apply `Bionic Reading` styles to
 ![BionicB](./screenshots/BionicB.png)
 
 
-## How to use it
-### Install dependencies
+## how to use it
+### install dependencies
 ```bash
 npm i
 ```
 
-### Default colorful style
+### default colorful style
 ```bash
 node ./index.js <epubPath>
 ```
 
-### Black style
+### black style
 ```bash
 node ./index.js <epubPath> --black
 ```
 
-## How to get a pdf version
+## how to get a pdf version
 1. install `Calibre`
 2. use `ebook-convert` command (make sure the environmental variable path is correctly added)
 ```bash
 ebook-convert <inputPath>.epub <outputPath>.pdf
 ```
+
+## testing
+`Calibre` passed
+
+**some epub viewers not passed**
+
+## customization
+- boldColors
+- unfocusedOpacity
