@@ -36,9 +36,9 @@ ebook-convert <inputPath>.epub <outputPath>.pdf
 ```
 
 ## testing
-`Calibre` passed
-
-**some epub viewers not passed yet**
+- `Calibre` passed 
+- `NeoReader by Boox` passed 
+- **some epub viewers not passed yet**
 
 ## customization
 - boldColors

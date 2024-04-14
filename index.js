@@ -100,16 +100,18 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
             }
         });
 
-        // Create a new EPUB file with the appropriate prefix
+        // Create a new EPUB file with Bionic prefix
         const prefix = colorMode === 'black' ? 'BionicB_' : 'BionicC_';
         const epubFileName = `${prefix}${name}.epub`;
         const epubFilePath = path.join(dir, epubFileName);
+        
         const output = fs.createWriteStream(epubFilePath);
         const archive = archiver('zip', {
-            zlib: { level: 9 }
+            zlib: { level: 9 } // Sets the compression level.
         });
 
-        // Listen for all archive data to be written
+        // listen for all archive data to be written
+        // 'close' event is fired only when a file descriptor is involved
         output.on('close', () => {
             console.log(`EPUB file created: ${epubFilePath}`);
 
