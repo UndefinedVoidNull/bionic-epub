@@ -1,5 +1,5 @@
 # bionic-epub
-bionic-epub is a `Node.js` command-line tool to apply `Bionic Reading` styles to `.epub` file
+📔 bionic-epub is a `Node.js` command-line tool to apply `Bionic Reading` styles to `.epub` file which can help you to **read faster**⚡🌠 and **focus more easily**🌳⏳
 
 ## effects
 ### Original
@@ -36,13 +36,13 @@ ebook-convert <inputPath>.epub <outputPath>.pdf
 ```
 
 ## testing
-- `Calibre` passed 
-- `NeoReader by Boox` passed 
-- **some epub viewers not passed yet**
+- `Calibre` passed ✅
+- `NeoReader by Boox` passed ✅
+- **some epub viewers not passed yet** ❌
 
 ## customization
 - boldColors
 - unfocusedOpacity
 
 ## notice
-It only applies the Bionic Style to `<p>`, `<h1>` to `<h6>`,  `<li>`, `<th>` and `<td>` , which means it will not apply the styles to any other elements
+It will only apply the Bionic Style to `<p>`, `<h1>` to `<h6>`,  `<li>`, `<th>` and `<td>` , which means it will not apply the styles to any other elements
