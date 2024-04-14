@@ -73,8 +73,9 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
                 // Load the HTML or XHTML content into Cheerio
                 const $ = cheerio.load(data);
 
+                // FIXME: Using .text() will make a links invalid
                 // Apply Bionic Reading style to the text content
-                $('p, h1, h2, h3, h4, h5, h6, li, th, td').each((index, element) => {
+                $('a, p, h1, h2, h3, h4, h5, h6, li, th, td').each((index, element) => {
                     const text = $(element).text();
                     const bionicText = colorMode === 'black'
                         ? applyBionicReadingBlack(text, unfocusedOpacity)
