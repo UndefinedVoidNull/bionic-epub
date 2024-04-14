@@ -57,10 +57,7 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
         }
     });
 
-    // Path to the OEBPS folder
-    const oebpsPath = path.join(outputDirPath, 'OEBPS');
-
-    // Function to apply Bionic Reading style to HTML files recursively
+    // Function to apply Bionic Reading style to HTML and XHTML files recursively
     function applyBionicReadingToFiles(folderPath) {
         fs.readdirSync(folderPath).forEach((file) => {
             const filePath = path.join(folderPath, file);
@@ -69,11 +66,11 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
             // Recursively process subdirectories
             if (stats.isDirectory()) {
                 applyBionicReadingToFiles(filePath);
-            } else if (stats.isFile() && path.extname(file) === '.html') {
-                // Read the HTML file
+            } else if (stats.isFile() && (path.extname(file) === '.html' || path.extname(file) === '.xhtml')) {
+                // Read the HTML or XHTML file
                 const data = fs.readFileSync(filePath, 'utf8');
 
-                // Load the HTML content into Cheerio
+                // Load the HTML or XHTML content into Cheerio
                 const $ = cheerio.load(data);
 
                 // Apply Bionic Reading style to the text content
@@ -85,14 +82,14 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
                     $(element).html(bionicText);
                 });
 
-                // Write the modified content back to the HTML file
+                // Write the modified content back to the file
                 fs.writeFileSync(filePath, $.html(), 'utf8');
             }
         });
     }
 
-    // Apply Bionic Reading style to HTML files recursively
-    applyBionicReadingToFiles(oebpsPath);
+    // Apply Bionic Reading style to HTML and XHTML files recursively in the decompressed folder
+    applyBionicReadingToFiles(outputDirPath);
 
     // Create a new EPUB file with Bionic prefix
     const prefix = colorMode === 'black' ? 'BionicB_' : 'BionicC_';
