@@ -43,3 +43,6 @@ ebook-convert <inputPath>.epub <outputPath>.pdf
 ## customization
 - boldColors
 - unfocusedOpacity
+
+## notice
+It only applies the Bionic Style to `<p>`, `<h1>` to `<h6>`,  `<li>`, `<th>` and `<td>` , which means it will not apply the styles to any other elements
