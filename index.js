@@ -100,9 +100,10 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
             }
         });
 
-        // Create a new EPUB file
-        const epubFileName = `${name}_bionic.epub`;
-        const epubFilePath = path.join(__dirname, epubFileName);
+        // Create a new EPUB file with the appropriate prefix
+        const prefix = colorMode === 'black' ? 'BionicB_' : 'Bionic_';
+        const epubFileName = `${prefix}${name}.epub`;
+        const epubFilePath = path.join(dir, epubFileName);
         const output = fs.createWriteStream(epubFilePath);
         const archive = archiver('zip', {
             zlib: { level: 9 }
@@ -111,6 +112,15 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
         // Listen for all archive data to be written
         output.on('close', () => {
             console.log(`EPUB file created: ${epubFilePath}`);
+
+            // Delete the decompressed folder
+            fs.rm(outputDirPath, { recursive: true, force: true }, (err) => {
+                if (err) {
+                    console.error('Error deleting decompressed folder:', err);
+                } else {
+                    console.log('Decompressed folder deleted successfully.');
+                }
+            });
         });
 
         // Catch warnings (e.g. stat failures and other non-blocking errors)
