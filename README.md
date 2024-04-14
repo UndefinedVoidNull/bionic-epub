@@ -35,7 +35,7 @@ node ./index.js <epubPath> --black
 ebook-convert <inputPath>.epub <outputPath>.pdf
 ```
 
-notice: `pandoc` will not keep the color by default
+notice: `pandoc` would **not** keep the color by default
 
 ## testing
 - `Calibre` passed ✅
@@ -45,6 +45,3 @@ notice: `pandoc` will not keep the color by default
 ## customization
 - boldColors
 - unfocusedOpacity
-
-## notice
-It will only apply the Bionic Style to `<p>`, `<h1>` to `<h6>`,  `<li>`, `<th>` and `<td>` , which means it will not apply the styles to any other elements

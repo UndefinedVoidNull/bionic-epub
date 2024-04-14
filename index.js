@@ -73,14 +73,15 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
                 // Load the HTML or XHTML content into Cheerio
                 const $ = cheerio.load(data);
 
-                // FIXME: Using .text() will make a links invalid
-                // Apply Bionic Reading style to the text content
-                $('a, p, h1, h2, h3, h4, h5, h6, li, th, td').each((index, element) => {
-                    const text = $(element).text();
-                    const bionicText = colorMode === 'black'
-                        ? applyBionicReadingBlack(text, unfocusedOpacity)
-                        : applyBionicReadingColor(text, boldColors, unfocusedOpacity);
-                    $(element).html(bionicText);
+                // Apply Bionic Reading style to the text nodes
+                $('*').contents().each((index, node) => {
+                    if (node.type === 'text') {
+                        const text = $(node).text();
+                        const bionicText = colorMode === 'black'
+                            ? applyBionicReadingBlack(text, unfocusedOpacity)
+                            : applyBionicReadingColor(text, boldColors, unfocusedOpacity);
+                        $(node).replaceWith(bionicText);
+                    }
                 });
 
                 // Write the modified content back to the file
