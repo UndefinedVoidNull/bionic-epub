@@ -5,10 +5,10 @@ bionic-epub is a `Node.js` command-line tool to apply `Bionic Reading` styles to
 ### Original
 ![Original](./screenshots/Original.png)
 
-### Bionic
+### BionicC (Default)
 ![Bionic](./screenshots/Bionic.png)
 
-### BionicB
+### BionicB (--black)
 ![BionicB](./screenshots/BionicB.png)
 
 

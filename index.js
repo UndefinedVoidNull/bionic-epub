@@ -101,7 +101,7 @@ fs.copyFile(epubFilePath, zipFilePath, (err) => {
         });
 
         // Create a new EPUB file with the appropriate prefix
-        const prefix = colorMode === 'black' ? 'BionicB_' : 'Bionic_';
+        const prefix = colorMode === 'black' ? 'BionicB_' : 'BionicC_';
         const epubFileName = `${prefix}${name}.epub`;
         const epubFilePath = path.join(dir, epubFileName);
         const output = fs.createWriteStream(epubFilePath);
